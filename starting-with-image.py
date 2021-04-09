@@ -13,7 +13,7 @@ img2
 # mask for 64-bit machine
 getKey = cv2.waitKey(0) & 0xFF
 
-if getKey == 27:
+if getKey == 27: # press esc to quit
     destroy
 elif getKey == ord('s'):
     #write image into a file
