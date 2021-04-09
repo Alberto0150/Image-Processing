@@ -9,7 +9,9 @@ destroy = cv2.destroyAllWindows()
 img2 =cv2.imshow('fileImage', img)
 # <fileImage> is the window name as the image is open
 img2
-getKey = cv2.waitKey(0)
+
+# mask for 64-bit machine
+getKey = cv2.waitKey(0) & 0xFF
 
 if getKey == 27:
     destroy
