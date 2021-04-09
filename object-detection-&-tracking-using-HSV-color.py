@@ -15,9 +15,16 @@ cv2.createTrackbar("UH", "Tracking", 255, 255, nothing)
 cv2.createTrackbar("US", "Tracking", 255, 255, nothing)
 cv2.createTrackbar("UV", "Tracking", 255, 255, nothing)
 
+#Capturing video
+capture = cv2.VideoCapture(0)
+
 
 while True:
-    frame = cv2.imread('dance.jpg')
+    #Read image
+    #frame = cv2.imread('dance.jpg')
+
+    #Read video
+    _, frame = capture.read() 
 
     #Changing image into HSV color
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -43,8 +50,11 @@ while True:
 
     cv2.imshow('result frame', result)
 
-    key=cv2.waitKey(1)
+    key=cv2.waitKey(1) # esc key
     if key ==27:
         break
+
+#Release the camera
+capture.release()
 
 cv2.destroyAllWindows()

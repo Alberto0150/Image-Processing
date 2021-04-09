@@ -26,6 +26,7 @@ while (capture.isOpened()):
     else:
         break
 
+# Release the camera
 capture.release()
 saving.release()
 cv2.destroyAllWindows()
