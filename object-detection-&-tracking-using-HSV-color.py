@@ -50,8 +50,8 @@ while True:
 
     cv2.imshow('Object Detection Result', result)
 
-    key=cv2.waitKey(1) # esc key
-    if key ==27:
+    key=cv2.waitKey(1) 
+    if key ==27: # esc key
         break
 
 #Release the camera
