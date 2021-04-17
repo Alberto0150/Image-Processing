@@ -5,15 +5,15 @@ def nothing(x):
     pass
 
 #Creating UI for trackbar
-cv2.namedWindow("Object Detection Result")
+cv2.namedWindow("setting")
 #creating the trackbar
-cv2.createTrackbar("LH", "Object Detection Result", 0, 255, nothing)
-cv2.createTrackbar("LS", "Object Detection Result", 0, 255, nothing)
-cv2.createTrackbar("LV", "Object Detection Result", 0, 255, nothing)
+cv2.createTrackbar("LH", "setting", 0, 255, nothing)
+cv2.createTrackbar("LS", "setting", 0, 255, nothing)
+cv2.createTrackbar("LV", "setting", 0, 255, nothing)
 
-cv2.createTrackbar("UH", "Object Detection Result", 255, 255, nothing)
-cv2.createTrackbar("US", "Object Detection Result", 255, 255, nothing)
-cv2.createTrackbar("UV", "Object Detection Result", 255, 255, nothing)
+cv2.createTrackbar("UH", "setting", 255, 255, nothing)
+cv2.createTrackbar("US", "setting", 255, 255, nothing)
+cv2.createTrackbar("UV", "setting", 255, 255, nothing)
 
 #Capturing video
 capture = cv2.VideoCapture(0)
@@ -30,13 +30,13 @@ while True:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     #Get trackbar position
-    lowerHue= cv2.getTrackbarPos("LH", "Object Detection Result")
-    lowerSaturation= cv2.getTrackbarPos("LS", "Object Detection Result")
-    lowerValue= cv2.getTrackbarPos("LV", "Object Detection Result")
+    lowerHue= cv2.getTrackbarPos("LH", "setting")
+    lowerSaturation= cv2.getTrackbarPos("LS", "setting")
+    lowerValue= cv2.getTrackbarPos("LV", "setting")
 
-    upperHue= cv2.getTrackbarPos("UH", "Object Detection Result")
-    upperSaturation= cv2.getTrackbarPos("US", "Object Detection Result")
-    upperValue= cv2.getTrackbarPos("UV", "Object Detection Result")
+    upperHue= cv2.getTrackbarPos("UH", "setting")
+    upperSaturation= cv2.getTrackbarPos("US", "setting")
+    upperValue= cv2.getTrackbarPos("UV", "setting")
 
     #Set the upper and lower value
     getLowerValueBlue = np.array([lowerHue, lowerSaturation, lowerValue])
