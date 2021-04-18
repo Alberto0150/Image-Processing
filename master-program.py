@@ -1,67 +1,49 @@
 import cv2
 import numpy as np
 
-def nothing(x):
-    pass
+capture = cv2.VideoCapture('testvideo.avi')
 
-#Creating UI Window for trackbar
-cv2.namedWindow("Trackbar Window")
-#Creating the trackbar
-cv2.createTrackbar("LH", "Trackbar Window", 0, 360, nothing)
-cv2.createTrackbar("LS", "Trackbar Window", 0, 255, nothing)
-cv2.createTrackbar("LV", "Trackbar Window", 0, 255, nothing)
+ret, frame1 = capture.read()
+ret, frame2 = capture.read()
 
-cv2.createTrackbar("UH", "Trackbar Window", 360, 360, nothing)
-cv2.createTrackbar("US", "Trackbar Window", 255, 255, nothing)
-cv2.createTrackbar("UV", "Trackbar Window", 255, 255, nothing)
+while capture.isOpened():
+    diff = cv2.absdiff(frame1, frame2)
+    # easier to find out contour in the latest stages
+    gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+    # blur the greyscale frame
+    # (5,5) is the kernal size
+    blur = cv2.GaussianBlur(gray, (5,5), 0)
+    # find out the threshold
+    _, thresh = cv2.threshold(blur, 100, 255, cv2.THRESH_BINARY)
 
-#Capturing video
-capture = cv2.VideoCapture(0)
+    dilated = cv2.dilate(thresh, None, iterations=3)
 
-
-while True:
-
-    #Read video
-    _, frame = capture.read() 
-
-    #Set for threshold video
-    _, framethr = capture.read()
-
-    #Changing image into HSV color
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    #Get trackbar position
-    lowerHue= cv2.getTrackbarPos("LH", "Trackbar Window")
-    lowerSaturation= cv2.getTrackbarPos("LS", "Trackbar Window")
-    lowerValue= cv2.getTrackbarPos("LV", "Trackbar Window")
-
-    upperHue= cv2.getTrackbarPos("UH", "Trackbar Window")
-    upperSaturation= cv2.getTrackbarPos("US", "Trackbar Window")
-    upperValue= cv2.getTrackbarPos("UV", "Trackbar Window")
-
-    #Set the upper and lower value
-    getLowerValue = np.array([lowerHue, lowerSaturation, lowerValue])
-    getUpperValue = np.array([upperHue, upperSaturation, upperValue])
-
-    #Set masking so only get the color between upper and lower value
-    masking = cv2.inRange(hsv, getLowerValue, getUpperValue)
-
-    #Use bitwise_and method to mask original image
-    resultmask = cv2.bitwise_and(frame, frame, mask=masking)
-
-    #Apply threshold
-    #Refference  https://stackoverflow.com/a/16887548/15296238
-    framethr[(resultmask[...,1]<180)]=0
-
-    cv2.imshow('thresholded', framethr)
-    cv2.imshow('camera', resultmask)
+    # find out the contour
+    # SECOND ARGUMENT = MODE
+    # THIRD ARGUMENT = METHOD
+    contours, _ = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 
-    key=cv2.waitKey(1) # esc key
-    if key ==27:
+
+
+    # outline object contours
+    # apply the contours to original frame
+    # THIRD ARGUMENT = CONTOUR ID -> -1 = apply all the contours
+    # FORTH ARGUMENT = COLOR
+    # FIFTH ARGUMENT = THICKNESS
+    cv2.drawContours(frame1, contours, -1, (0,255,0), 2)
+
+
+    cv2.imshow("feed", frame1)
+
+    # assign value frame1 from frame2
+    frame1=frame2
+
+    #reading new frame in frame2
+    ret, frame2 = capture.read()
+
+    if cv2.waitKey(40)==27:
         break
 
-#Release the camera
-capture.release()
-
 cv2.destroyAllWindows()
+capture.release()
